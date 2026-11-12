@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Контакты — Сериальщик</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Unbounded:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<!-- до отрисовки страницы отмечаем, вошёл ли пользователь, чтобы шапка не «мигала» -->
+<script>try{var u=JSON.parse(localStorage.getItem('currentUser'));if(u)document.documentElement.classList.add('logged');}catch(e){}</script>
+</head>
+<body data-page="contacts">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5zM3 13l9 5 9-5"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.5-9C1 7.8 3 4.5 6.5 4.5c2.2 0 3.6 1.2 5.5 3.3 1.9-2.1 3.3-3.3 5.5-3.3C21 4.5 23 7.8 21.5 11 19.5 15.4 12 20 12 20z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M15 8l4 4-4 4M19 12H9"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></symbol>
+</svg>
+<header class="top">
+  <button type="button" class="icon-btn burger" id="burger" aria-label="Открыть меню"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg></button>
+  <a href="index.html" class="logo">
+    <span class="logo-mark"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
+    <span><b>Сериальщик</b><small>Каталог сериалов · учебный проект</small></span>
+  </a>
+  <label class="search"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><span class="sr">Поиск по сериалам</span><input id="topSearch" type="search" placeholder="Поиск по сериалам"><span class="kbd">Ctrl K</span></label>
+  <a href="catalog.html" class="btn hide-md">Подобрать сериал →</a>
+  <div class="acc">
+    <button type="button" class="btn out sm acc-guest" data-auth="login">Войти</button>
+    <button type="button" class="btn sm acc-guest acc-reg" data-auth="reg">Регистрация</button>
+    <a href="cabinet.html" class="profile acc-user" id="hProfile" title="Личный кабинет" aria-label="Личный кабинет"><span class="ava" id="hAva"></span><span class="who"><b id="hName"></b><small>зритель</small></span><span class="badge" id="topBadge" style="display:none">0</span></a>
+    <button type="button" class="icon-btn tip tip-r acc-user" id="logoutBtn" data-tip="Выйти" aria-label="Выйти"><svg class="i" aria-hidden="true"><use href="#i-logout"/></svg></button>
+  </div>
+</header>
+<div class="layout">
+<nav class="side" aria-label="Разделы сайта">
+  <h4>Каталог</h4>
+  <a href="index.html" data-p="home"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>Главная</a>
+  <a href="catalog.html" data-p="catalog"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg>Все сериалы</a>
+  <a href="collections.html" data-p="collections"><svg class="i" aria-hidden="true"><use href="#i-layers"/></svg>Подборки</a>
+  <a href="howto.html" data-p="howto"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>Как выбрать</a>
+  <a href="faq.html" data-p="faq"><svg class="i" aria-hidden="true"><use href="#i-help"/></svg>Вопросы</a>
+  <h4>Справка</h4>
+  <a href="contacts.html" data-p="contacts" class="on" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg>Контакты</a>
+  <a href="faq.html" data-p="privacy"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg>Где хранится список</a>
+</nav>
+<div class="content" id="content">
+<main class="page" id="contacts">
+  <div class="crumbs"><a href="index.html">Главная</a> / Контакты</div>
+  <div class="eyebrow">Раздел 05</div>
+  <h1>Контакты</h1>
+  <p class="lead">Нашёл ошибку или хочешь предложить сериал — напиши, ответим.</p>
+  <div class="two">
+    <form class="card form" novalidate>
+      <h2 style="margin-bottom:6px">Обратная связь</h2>
+      <label for="cn">Имя</label><input class="field" id="cn" type="text" placeholder="Как тебя зовут">
+      <label for="ce">Email</label><input class="field" id="ce" type="email" placeholder="you@mail.ru">
+      <label for="cm">Сообщение</label><textarea class="field" id="cm" placeholder="Например: добавьте «Игру престолов»"></textarea>
+      <button type="submit" class="btn" style="margin-top:12px">Отправить</button>
+    </form>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="card" style="padding:8px 22px">
+        <div class="kv"><span class="muted">Почта</span><b class="mono">[ВАША ПОЧТА]</b></div>
+        <div class="kv"><span class="muted">Телефон</span><b class="mono">[ВАШ ТЕЛЕФОН]</b></div>
+        <div class="kv"><span class="muted">Соцсети</span><span class="row" style="gap:16px"><a href="#" class="link">ВКонтакте</a><a href="#" class="link">Telegram</a></span></div>
+      </div>
+      <div class="card" style="padding:22px 24px;background:var(--lime);color:#11140D;border:0">
+        <div class="eyebrow" style="color:#11140D">Новинки на почту</div>
+        <form class="row" novalidate><label for="sub" class="sr">Email для подписки</label><input class="field" id="sub" type="email" placeholder="you@mail.ru" style="flex:1 1 180px;background:#11140D;border-color:#11140D"><button type="submit" class="btn" style="background:#11140D;color:var(--lime);border-color:#11140D">Подписаться</button></form>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="fcols">
+    <div>
+      <a href="index.html" class="logo" style="margin-bottom:12px;color:var(--text)"><span class="logo-mark"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span><span><b>Сериальщик</b><small>Каталог сериалов · учебный проект</small></span></a>
+      <span>Каталог сериалов по жанрам с поиском, подборками и личным списком «Буду смотреть».</span>
+    </div>
+    <div><h5>Каталог</h5><a href="catalog.html">Все сериалы</a><a href="collections.html">Подборки</a><a href="howto.html">Как выбрать</a><a href="faq.html">Вопросы</a></div>
+    <div><h5>Аккаунт</h5><a href="cabinet.html">Личный кабинет</a><a href="#" data-auth="login">Вход</a><a href="#" data-auth="reg">Регистрация</a></div>
+    <div><h5>Контакты</h5><span>[ВАША ПОЧТА]</span><span>[ВАШ ТЕЛЕФОН]</span><a href="contacts.html">Обратная связь</a></div>
+  </div>
+  <div class="fbottom"><span>© 2026 Сериальщик · учебный проект</span><span class="mono">Версия 1.0</span></div>
+</footer>
+</div>
+</div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="overlay" id="authOverlay" aria-hidden="true">
+  <div class="auth" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="auth-head">
+      <span class="logo-mark"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
+      <div><b id="authTitle">Сериальщик</b><small>Каталог сериалов</small></div>
+      <button type="button" class="auth-x" id="authClose" aria-label="Закрыть">×</button>
+    </div>
+    <div class="seg" role="tablist" aria-label="Вход или регистрация">
+      <button type="button" role="tab" data-mode="login">Вход</button>
+      <button type="button" role="tab" data-mode="reg">Регистрация</button>
+    </div>
+    <div class="notice" id="authNotice" style="display:none"></div>
+    <form class="af" id="loginForm" novalidate>
+      <div><label for="lLogin">Логин</label><input class="field" id="lLogin" type="text" autocomplete="username"><span class="err" id="eLLogin"></span></div>
+      <div><label for="lPass">Пароль</label><input class="field" id="lPass" type="password" autocomplete="current-password"><span class="err" id="eLPass"></span></div>
+      <button type="submit" class="btn-wide">Войти</button>
+      <p class="auth-note">Нет учётной записи? <button type="button" data-mode="reg">Зарегистрироваться</button></p>
+    </form>
+    <form class="af" id="regForm" novalidate>
+      <div><label for="rName">ФИО</label><input class="field" id="rName" type="text" placeholder="Иванова Анна Сергеевна" autocomplete="name"><span class="err" id="eRName"></span></div>
+      <div class="pair">
+        <div><label for="rLogin">Логин</label><input class="field" id="rLogin" type="text" placeholder="от 3 символов" autocomplete="username"><span class="err" id="eRLogin"></span></div>
+        <div><label for="rMail">Почта</label><input class="field" id="rMail" type="email" placeholder="name@mail.ru" autocomplete="email"><span class="err" id="eRMail"></span></div>
+      </div>
+      <div class="pair">
+        <div><label for="rPass">Пароль</label><input class="field" id="rPass" type="password" placeholder="от 6 символов" autocomplete="new-password"><span class="err" id="eRPass"></span></div>
+        <div><label for="rPass2">Повтор пароля</label><input class="field" id="rPass2" type="password" autocomplete="new-password"><span class="err" id="eRPass2"></span></div>
+      </div>
+      <div><label for="rCap">Введите символы с картинки</label>
+        <div class="captcha">
+          <canvas id="capCanvas" width="264" height="88" role="img" aria-label="Картинка с символами для проверки"></canvas>
+          <button type="button" class="icon-btn" id="capNew" aria-label="Обновить картинку"><svg class="i" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>
+          <input class="field" id="rCap" type="text" placeholder="•••••" maxlength="5" autocomplete="off">
+        </div>
+        <span class="err" id="eRCap"></span>
+      </div>
+      <label style="display:flex;align-items:center;gap:10px;font-weight:400"><input type="checkbox" id="rAgree" style="width:18px;height:18px;accent-color:#D4FE3A">Согласен с правилами сайта</label>
+      <span class="err" id="eRAgree" style="margin-top:-6px"></span>
+      <button type="submit" class="btn-wide">Зарегистрироваться</button>
+      <p class="auth-note">Новая учётная запись получает роль «зритель». Уже есть аккаунт? <button type="button" data-mode="login">Войти</button></p>
+    </form>
+    <form class="af" id="confirmForm" novalidate style="display:none">
+      <div class="confirm-ico"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg></div>
+      <p class="confirm-title">Подтвердите почту</p>
+      <p class="confirm-text">Мы отправили 6-значный код на <b id="cMail" style="color:var(--text)"></b></p>
+      <fieldset style="border:0;padding:0;margin:0">
+        <legend class="sr">Код из письма, 6 цифр</legend>
+        <div class="code" id="codeBoxes">
+          <label class="sr" for="c1">Цифра 1</label><input id="c1" inputmode="numeric" maxlength="1">
+          <label class="sr" for="c2">Цифра 2</label><input id="c2" inputmode="numeric" maxlength="1">
+          <label class="sr" for="c3">Цифра 3</label><input id="c3" inputmode="numeric" maxlength="1">
+          <label class="sr" for="c4">Цифра 4</label><input id="c4" inputmode="numeric" maxlength="1">
+          <label class="sr" for="c5">Цифра 5</label><input id="c5" inputmode="numeric" maxlength="1">
+          <label class="sr" for="c6">Цифра 6</label><input id="c6" inputmode="numeric" maxlength="1">
+        </div>
+      </fieldset>
+      <span class="err" id="eCode" style="text-align:center"></span>
+      <button type="submit" class="btn-wide">Подтвердить</button>
+      <p class="resend">Не пришло письмо? <button type="button" id="resend" disabled>Отправить ещё раз через 30 с</button></p>
+      <p class="resend" style="margin-top:4px"><button type="button" class="linkbtn" id="backToReg">← Изменить данные</button></p>
+    </form>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
